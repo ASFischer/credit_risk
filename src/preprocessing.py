@@ -1,5 +1,6 @@
 def rename_columns(df):
     column_mapping = {
+        'Unnamed: 0': 'id',
         'X1': 'limit_bal',
         'X2': 'sex',
         'X3': 'education',
