@@ -27,3 +27,8 @@ def rename_columns(df):
         'Y': 'default'
     }
     return df.rename(columns=column_mapping)
+
+def transform_variables(df):
+    to_numerical={
+        
+    }
