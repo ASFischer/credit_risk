@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 def rename_columns(df):
     column_mapping = {
         'Unnamed: 0': 'id',
@@ -28,7 +31,37 @@ def rename_columns(df):
     }
     return df.rename(columns=column_mapping)
 
+
+
 def transform_variables(df):
-    to_numerical={
+    df = df.copy()
+
+    #Numéricas reais (valores contínuos)
+    numeric_cols = [
+        'limit_bal',
+        'age',
         
-    }
+        'bill_amt1','bill_amt2','bill_amt3',
+        'bill_amt4','bill_amt5','bill_amt6',
+        
+        'pay_amt1','pay_amt2','pay_amt3',
+        'pay_amt4','pay_amt5','pay_amt6',
+        
+        'pay_0','pay_2','pay_3',
+        'pay_4','pay_5','pay_6'
+    ]
+
+    #Converter para numérico
+    for col in numeric_cols:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+
+    #Categóricas (mantidas como categoria)
+    categorical_cols = ['sex','education','marriage']
+
+    for col in categorical_cols:
+        df[col] = df[col].astype('category')
+
+    #Target (garantir inteiro)
+    df['default'] = pd.to_numeric(df['default'], errors='coerce').astype('int')
+
+    return df
