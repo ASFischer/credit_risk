@@ -9,7 +9,7 @@ def rename_columns(df):
         'X3': 'education',
         'X4': 'marriage',
         'X5': 'age',
-        'X6': 'pay_0',
+        'X6': 'pay_1',
         'X7': 'pay_2',
         'X8': 'pay_3',
         'X9': 'pay_4',
@@ -39,6 +39,9 @@ def transform_variables(df):
     #Numéricas reais (valores contínuos)
     numeric_cols = [
         'limit_bal',
+        'sex',
+        'education',
+        'marriage',
         'age',
         
         'bill_amt1','bill_amt2','bill_amt3',
@@ -47,7 +50,7 @@ def transform_variables(df):
         'pay_amt1','pay_amt2','pay_amt3',
         'pay_amt4','pay_amt5','pay_amt6',
         
-        'pay_0','pay_2','pay_3',
+        'pay_1','pay_2','pay_3',
         'pay_4','pay_5','pay_6'
     ]
 
@@ -55,13 +58,29 @@ def transform_variables(df):
     for col in numeric_cols:
         df[col] = pd.to_numeric(df[col], errors='coerce')
 
-    #Categóricas (mantidas como categoria)
-    categorical_cols = ['sex','education','marriage']
-
-    for col in categorical_cols:
-        df[col] = df[col].astype('category')
-
     #Target (garantir inteiro)
     df['default'] = pd.to_numeric(df['default'], errors='coerce').astype('int')
 
+    return df
+
+
+def clean_data(df):
+    df = df.copy()
+    df['education'] = df['education'].apply(lambda x: 4 if x in [0, 5, 6] else x)
+    df['marriage'] = df['marriage'].replace(0, 3)
+    return df
+
+def replace_to_zero(df, col):
+    filter = (df[col] == -2) | (df[col] == -1) | (df[col] == 0)
+    df.loc[filter, col] = 0
+    return df
+
+def process_status(df):
+    df = df.copy()
+    
+    pay_columns = ['pay_1', 'pay_2', 'pay_3', 'pay_4', 'pay_5', 'pay_6']
+    
+    for i in pay_columns:
+        df = replace_to_zero(df, i)
+        
     return df
