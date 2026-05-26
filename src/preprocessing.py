@@ -54,11 +54,9 @@ def transform_variables(df):
         'pay_4','pay_5','pay_6'
     ]
 
-    #Converter para numérico
     for col in numeric_cols:
         df[col] = pd.to_numeric(df[col], errors='coerce')
 
-    #Target (garantir inteiro)
     df['default'] = pd.to_numeric(df['default'], errors='coerce').astype('int')
 
     return df
